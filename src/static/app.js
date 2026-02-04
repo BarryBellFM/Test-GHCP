@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Clear loading message
       activitiesList.innerHTML = "";
 
+      // Reset activity select (keep placeholder)
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
@@ -26,6 +29,32 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
+
+        // Add participants section
+        const participantsHeader = document.createElement('h5');
+        participantsHeader.textContent = 'Participants';
+
+        const participantsList = document.createElement('ul');
+        participantsList.className = 'participants-list';
+
+        if (details.participants.length === 0) {
+          const li = document.createElement('li');
+          li.textContent = 'No participants yet.';
+          li.className = 'no-participants';
+          participantsList.appendChild(li);
+        } else {
+          details.participants.forEach(email => {
+            const li = document.createElement('li');
+            const tag = document.createElement('span');
+            tag.className = 'participant-tag';
+            tag.textContent = email;
+            li.appendChild(tag);
+            participantsList.appendChild(li);
+          });
+        }
+
+        activityCard.appendChild(participantsHeader);
+        activityCard.appendChild(participantsList);
 
         activitiesList.appendChild(activityCard);
 
@@ -60,11 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         messageDiv.textContent = result.message;
-        messageDiv.className = "success";
+        messageDiv.className = "message success";
+        // Refresh UI to show new participant and updated availability
+        fetchActivities();
         signupForm.reset();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
-        messageDiv.className = "error";
+        messageDiv.className = "message error";
       }
 
       messageDiv.classList.remove("hidden");
@@ -75,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 5000);
     } catch (error) {
       messageDiv.textContent = "Failed to sign up. Please try again.";
-      messageDiv.className = "error";
+      messageDiv.className = "message error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
     }
