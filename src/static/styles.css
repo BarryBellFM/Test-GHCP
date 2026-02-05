@@ -102,6 +102,24 @@ section h3 {
   box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
 }
 
+.delete-participant-btn {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+  margin-left: 4px;
+  transition: color 0.2s, transform 0.2s;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.delete-participant-btn:hover {
+  color: #b71c1c;
+  transform: scale(1.2);
+}
+
 /* Small muted text for empty state */
 .no-participants {
   color: #666;
